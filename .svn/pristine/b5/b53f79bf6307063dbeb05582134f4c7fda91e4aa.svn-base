@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace就是接口的全路径 -->
+<mapper namespace="com.cssl.dao.HouseDao">
+
+
+	<resultMap type="House" id="house_map">
+
+		<id column="id" property="id" />
+
+		<association property="user" javaType="User" />
+
+		<association property="dist" javaType="District" />
+
+		<association property="hstype" javaType="Hstype" />
+
+		<association property="street" javaType="Street" />
+
+	</resultMap>
+	<sql id="house_type">
+
+		<where>
+			<if test="hname!=null and hname!=''">
+				and hname like concat('%',#{hname},'%')
+				
+					
+			</if>
+
+			<if test="area2!=null and area2!=0 ">
+
+				and `area` between ${area1} and ${area2}
+						   
+			</if>
+
+			<if test="price2!=null and price2!=0">
+
+				and price between #{price1} and #{price2}
+
+			</if>
+
+			<if test="types!=null and types!=0">
+
+				and h.hid=#{types}
+
+			</if>
+
+			<if test="qu!=null and qu!=0">
+	
+	
+				and h.did=#{qu}
+			</if>
+
+			<if test="jie!=null and jie!=0">
+
+			  and h.sid=#{jie}
+			  
+			</if>
+			
+			<if test="userid!=null and userid!=0">
+			
+			and h.userid=#{userid}
+			
+			</if>
+		  
+		</where>
+
+	</sql>
+
+	<select id="selectAll" resultMap="house_map">
+
+		SELECT * FROM house h
+		INNER JOIN
+		`user` u ON u.userid=h.userid
+		INNER JOIN hstype hs ON hs.hid=h.hid
+		INNER JOIN district d ON d.did=h.did
+		INNER JOIN street s ON s.sid=h.sid
+		<include refid="house_type"/>
+
+	</select>
+	
+
+	<select id="selecttype" resultType="Hstype">
+
+		select * from hstype
+
+	</select>
+
+
+	<select id="selectearea" resultType="District">
+	
+		SELECT * FROM district
+		
+	</select>
+	
+	<select id="selectstreet" resultType="Street">
+	
+		select sid,sname from street where did=#{did}
+	
+	</select>
+	
+	<insert id="inserthouse">
+	
+	INSERT INTO `rent_house`.`house` (`userid`, `hname`, `hid`, `area`, `price`, `hiredate`, `did`, `sid`, `tel`, `message`)
+	VALUES(#{userid},#{hname},#{hid},#{area},#{price},#{hiredate},#{did},#{sid},#{tel},#{message});
+ 
+	
+	</insert>
+	
+	<select id="selecthouse" resultType="map">
+	
+	select * from house where id=#{id}
+	
+	</select>
+	
+	<update id="update">
+	
+	UPDATE `rent_house`.`house` SET  `hname` = #{hname} , `hid` = #{hid} , `area` = #{area} , `price` = #{price} , `hiredate` = #{hiredate} , `did` = #{did} , `sid` = #{sid} , `tel` = #{tel} , `message` = #{message} WHERE `id` = #{id} ;
+	
+	</update>
+	
+	<delete id="delete">
+	
+	delete from house where id=#{id}
+	</delete>
+	
+</mapper>

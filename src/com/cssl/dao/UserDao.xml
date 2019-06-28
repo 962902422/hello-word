@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace就是接口的全路径 -->
+<mapper namespace="com.cssl.dao.UserDao">
+
+  <select id="selectlog" resultType="User">
+  
+  select * from `user` where username=#{username} and userpwd=#{userpwd}
+  
+  </select>
+  
+ <select id="selectname" resultType="int">
+ 
+ select count(1) from `user` where username=#{username}
+ 
+ </select>
+ 
+ <insert id="insertuser">
+ 
+INSERT INTO `user`(username,userpwd,names,phone)VALUES(#{username},#{userpwd},#{names},#{phone})
+
+ 
+ </insert>
+  
+  
+</mapper>
